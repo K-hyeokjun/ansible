@@ -1,0 +1,11 @@
+---
+- name: /etc/motd 파일배포
+  hosts: all
+  gather_facts: yes
+  vars:
+    system_owner: webmaster@example.com
+  tasks:
+    - name: 배포할 motd 템플릿 파일 복사하기
+      template:
+        src: templates/motd.j2
+        dest: /etc/motd

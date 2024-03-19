@@ -1,0 +1,48 @@
+---
+# 1) 방화벽 서비스 off - http, https, mysql => firwalld
+# 2) 서비스 disable - httpd, mariadb => service
+# 3) 서비스 디렉토리 삭제 - /var/www/html => file
+# 4) 패키지 삭제 - .... => yum | dnf
+
+# 1) 방화벽 서비스 off - http, https, mysql => firwalld
+- name: "방화벽 서비스 off - http, https, mysql"
+  hosts: all
+  tasks: 
+  - name: "Disable service http, https, mysql"
+    firewalld:
+      service: "{{ item }}"
+      permanent: yes
+      immediate: yes
+      state: disabled
+    loop:
+      - 80/tcp
+      - 443/tcp
+      - mysql
+
+# 2) 서비스 disable - httpd, mariadb => service
+  - name: "서비스 Disable - httpd, mariadb"
+    service:
+      name: "{{ item }}"
+      enabled: no
+      state: stopped
+    loop:
+      - httpd
+      - mariadb
+# 3) 
+  - name: 서비스 디렉토리 삭제
+    file:
+      path: /var/www/html/
+      state: absent
+# 4) 
+  - name: 패키지 삭제
+    yum:
+      name: 
+        - httpd
+        - mod_ssl
+        - php
+        - php-mysqlnd
+        - php-pdo
+        - mariadb-server
+        - mariadb
+        - python3-pip
+      state: absent
